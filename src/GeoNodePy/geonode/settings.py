@@ -252,7 +252,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.sitemaps',
-    'staticfiles',
+    'django.contrib.staticfiles',
     'django_extensions',
     'registration',
     'profiles',
@@ -296,4 +296,3 @@ try:
     from local_settings import *
 except ImportError:
     pass
-
