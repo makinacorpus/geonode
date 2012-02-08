@@ -37,6 +37,7 @@ def ajax_login(request):
                 status=405,
                 mimetype="text/plain"
             )
+    
     form = AjaxLoginForm(data=request.POST)
     if form.is_valid():
         username = form.cleaned_data['username']

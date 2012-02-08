@@ -134,6 +134,7 @@ LAYER_LEV_NAMES = {
 }
 
 @transaction.commit_manually
+@csrf_exempt
 def maps(request, mapid=None):
     if request.method == 'GET':
         return render_to_response('maps.html', RequestContext(request))
@@ -514,7 +515,9 @@ def ajax_layer_permissions(request, layername):
         mimetype='text/plain'
     )
 
+@csrf_exempt
 def ajax_map_permissions(request, mapid):
+    logger.error('start')
     map = get_object_or_404(Map, pk=mapid)
 
     if not request.user.has_perm("maps.change_map_permissions", obj=map):
@@ -1067,10 +1070,12 @@ def layer_acls(request):
     # user which represents the geoserver administrator that
     # is not present in django.
     acl_user = request.user
+    logger.error("GET ACL for: %s" % acl_user)
     if 'HTTP_AUTHORIZATION' in request.META:
         try:
             username, password = _get_basic_auth_info(request)
             acl_user = authenticate(username=username, password=password)
+            logger.error("RESOLVE: %s" % acl_user)
 
             # Nope, is it the special geoserver user?
             if (acl_user is None and 
@@ -1094,6 +1099,8 @@ def layer_acls(request):
                                 mimetype="text/plain")
 
             
+    else:
+        logger.error("NOT RESOLVE")
     all_readable = set()
     all_writable = set()
     acl_objects = [acl_user] + [g for g in acl_user.groups.all()]
