@@ -145,7 +145,7 @@ def maps(request, mapid=None):
                 mimetype="text/plain",
                 status=401
             )
-        try: 
+        try:
             map = Map(owner=request.user, zoom=0, center_x=0, center_y=0)
             map.save()
             map.set_default_permissions()
