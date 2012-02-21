@@ -166,6 +166,9 @@ LOGIN_REDIRECT_URL = "/"
 
 DEFAULT_LAYERS_OWNER='admin'
 
+# projection
+DEFAULT_MAP_PROJECTION = "EPSG:900913"
+
 # Where should newly created maps be focused?
 DEFAULT_MAP_CENTER = (-84.7, 12.8)
 

@@ -520,6 +520,11 @@ _viewer_projection_lookup = {
         "units": "m",
         "maxExtent": [-20037508.34,-20037508.34,20037508.34,20037508.34],
     },
+    "EPSG:3857": {
+        "maxResolution": 156543.03390625,
+        "units": "m",
+        "maxExtent": [-20037508.34,-20037508.34,20037508.34,20037508.34],
+    },
     "EPSG:4326": {
         "max_resolution": (180 - (-180)) / 256,
         "units": "degrees",
