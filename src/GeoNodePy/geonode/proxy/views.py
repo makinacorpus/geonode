@@ -3,7 +3,7 @@ from httplib import HTTPConnection
 from urlparse import urlsplit
 import httplib2
 import urllib
-import simplejson 
+import json 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
@@ -23,13 +23,24 @@ def proxy(request):
         locator += '?' + url.query
     if url.fragment != "":
         locator += '#' + url.fragment
+    
+    post_data = request.raw_post_data
+    if locator.endswith("/pdf/create.json"):
+        parameters = json.loads(post_data)
+        layers = parameters['layers']
+        new_layers = []
+        for layer in layers:
+            layer['baseURL'] = layer['baseURL'].replace("/geoserver/wms", "/geoserver/%d/wms" % request.user.get_profile().id)
+            new_layers.append(layer)
+        parameters['layers'] = new_layers
+        post_data = json.dumps(parameters)
 
     headers = {}
     if settings.SESSION_COOKIE_NAME in request.COOKIES:
         headers["Cookie"] = request.META["HTTP_COOKIE"]
 
     conn = HTTPConnection(url.hostname, url.port)
-    conn.request(request.method, locator, request.raw_post_data, headers)
+    conn.request(request.method, locator, post_data, headers)
     result = conn.getresponse()
     response = HttpResponse(
             result.read(),
@@ -51,7 +62,7 @@ def geoserver_rest_proxy(request, proxy_path, downstream_path):
         return path[len(prefix):]
 
     path = strip_prefix(request.get_full_path(), proxy_path)
-    url = "".join([settings.GEOSERVER_BASE_URL, downstream_path, path])
+    url = "".join([settings.GEOSERVER_INTERNAL_URL, downstream_path, path])
 
     http = httplib2.Http()
     http.add_credentials(*settings.GEOSERVER_CREDENTIALS)
