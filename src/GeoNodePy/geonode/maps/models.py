@@ -1311,7 +1311,7 @@ class Map(models.Model, PermissionLevelMixin):
                 'title':    self.title,
                 'abstract': self.abstract
             },
-            'defaultSourceType': "gxp_wmscsource",
+            'defaultSourceType': settings.DEFAULT_SOURCE_TYPE,
             'sources': sources,
             'map': {
                 'layers': [layer_config(l) for l in layers],

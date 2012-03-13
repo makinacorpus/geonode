@@ -182,6 +182,7 @@ DEFAULT_LAYER_SOURCE = {
     "url":"/geoserver/wms",
     "restUrl": "/gs/rest"
 }
+DEFAULT_SOURCE_TYPE = "gxp_wmscsource"
 
 MAP_BASELAYERS = [{
     "source": {"ptype": "gx_olsource"},
