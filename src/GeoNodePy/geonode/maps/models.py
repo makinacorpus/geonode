@@ -1578,6 +1578,7 @@ class MapLayer(models.Model):
         cfg["fixed"] = self.fixed
         if self.group: cfg["group"] = self.group
         cfg["visibility"] = self.visibility
+        cfg["capability"] = None
 
         return cfg
 
