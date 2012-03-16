@@ -133,7 +133,7 @@ LAYER_LEV_NAMES = {
     Layer.LEVEL_ADMIN : _('Administrative')
 }
 
-@transaction.commit_manually
+#@transaction.commit_manually
 @csrf_exempt
 def maps(request, mapid=None):
     if request.method == 'GET':
@@ -152,10 +152,10 @@ def maps(request, mapid=None):
             map.update_from_viewer(request.raw_post_data)
             response = HttpResponse('', status=201)
             response['Location'] = map.id
-            transaction.commit()
+#            transaction.commit()
             return response
         except Exception, e:
-            transaction.rollback()
+#            transaction.rollback()
             return HttpResponse(
                 "The server could not understand your request." + str(e),
                 status=400, 
