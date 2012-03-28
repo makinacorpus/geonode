@@ -1406,9 +1406,12 @@ class MapLayerManager(models.Manager):
         ``source`` is the parsed dict for the layer's source
         ``ordering`` is the index of the layer within the map's layer list
         """
+        
         layer_cfg = dict(layer)
+
         for k in ["format", "name", "opacity", "styles", "transparent",
-                  "fixed", "group", "visibility", "title", "source"]:
+                  #"fixed", "group", "visibility", "title", "source"]:
+                  "fixed", "group", "visibility", "source"]:
             if k in layer_cfg: del layer_cfg[k]
 
         source_cfg = dict(source)
@@ -1573,7 +1576,7 @@ class MapLayer(models.Model):
         cfg["fixed"] = self.fixed
         if self.group: cfg["group"] = self.group
         cfg["visibility"] = self.visibility
-
+        
         return cfg
 
 
