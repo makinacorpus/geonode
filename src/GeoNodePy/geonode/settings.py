@@ -166,6 +166,9 @@ LOGIN_REDIRECT_URL = "/"
 
 DEFAULT_LAYERS_OWNER='admin'
 
+# projection
+DEFAULT_MAP_PROJECTION = "EPSG:900913"
+
 # Where should newly created maps be focused?
 DEFAULT_MAP_CENTER = (-84.7, 12.8)
 
@@ -179,6 +182,7 @@ DEFAULT_LAYER_SOURCE = {
     "url":"/geoserver/wms",
     "restUrl": "/gs/rest"
 }
+DEFAULT_SOURCE_TYPE = "gxp_wmscsource"
 
 MAP_BASELAYERS = [{
     "source": {"ptype": "gx_olsource"},

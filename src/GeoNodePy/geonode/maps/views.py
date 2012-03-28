@@ -54,7 +54,7 @@ def default_map_config():
     _default_map = Map(
         title=DEFAULT_TITLE, 
         abstract=DEFAULT_ABSTRACT,
-        projection="EPSG:900913",
+        projection=settings.DEFAULT_MAP_PROJECTION,
         center_x=_DEFAULT_MAP_CENTER[0],
         center_y=_DEFAULT_MAP_CENTER[1],
         zoom=settings.DEFAULT_MAP_ZOOM
@@ -133,7 +133,7 @@ LAYER_LEV_NAMES = {
     Layer.LEVEL_ADMIN : _('Administrative')
 }
 
-@transaction.commit_manually
+#@transaction.commit_manually
 @csrf_exempt
 def maps(request, mapid=None):
     if request.method == 'GET':
@@ -152,10 +152,10 @@ def maps(request, mapid=None):
             map.update_from_viewer(request.raw_post_data)
             response = HttpResponse('', status=201)
             response['Location'] = map.id
-            transaction.commit()
+#            transaction.commit()
             return response
         except Exception, e:
-            transaction.rollback()
+#            transaction.rollback()
             return HttpResponse(
                 "The server could not understand your request." + str(e),
                 status=400, 
@@ -227,7 +227,7 @@ def newmap_config(request):
         
         if 'layer' in params:
             bbox = None
-            map = Map(projection="EPSG:900913")
+            map = Map(projection=settings.DEFAULT_MAP_PROJECTION)
             layers = []
             for layer_name in params.getlist('layer'):
                 try:
@@ -844,7 +844,7 @@ def layerController(request, layername):
         maplayer = MapLayer(name = layer.typename, ows_url = settings.GEOSERVER_BASE_URL + "wms")
 
         # center/zoom don't matter; the viewer will center on the layer bounds
-        map = Map(projection="EPSG:900913")
+        map = Map(projection=settings.DEFAULT_MAP_PROJECTION)
 
         return render_to_response('maps/layer.html', RequestContext(request, {
             "layer": layer,
@@ -1443,7 +1443,7 @@ def search_page(request):
     else:
         return HttpResponse(status=405)
 
-    map = Map(projection="EPSG:900913", zoom = 1, center_x = 0, center_y = 0)
+    map = Map(projection=settings.DEFAULT_MAP_PROJECTION, zoom = 1, center_x = 0, center_y = 0)
 
     return render_to_response('search.html', RequestContext(request, {
         'init_search': json.dumps(params or {}),

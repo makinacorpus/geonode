@@ -520,6 +520,11 @@ _viewer_projection_lookup = {
         "units": "m",
         "maxExtent": [-20037508.34,-20037508.34,20037508.34,20037508.34],
     },
+    "EPSG:3857": {
+        "maxResolution": 156543.03390625,
+        "units": "m",
+        "maxExtent": [-20037508.34,-20037508.34,20037508.34,20037508.34],
+    },
     "EPSG:4326": {
         "max_resolution": (180 - (-180)) / 256,
         "units": "degrees",
@@ -1306,7 +1311,7 @@ class Map(models.Model, PermissionLevelMixin):
                 'title':    self.title,
                 'abstract': self.abstract
             },
-            'defaultSourceType': "gxp_wmscsource",
+            'defaultSourceType': settings.DEFAULT_SOURCE_TYPE,
             'sources': sources,
             'map': {
                 'layers': [layer_config(l) for l in layers],
@@ -1576,7 +1581,8 @@ class MapLayer(models.Model):
         cfg["fixed"] = self.fixed
         if self.group: cfg["group"] = self.group
         cfg["visibility"] = self.visibility
-        
+        cfg["capability"] = None
+
         return cfg
 
 
