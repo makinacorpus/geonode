@@ -1059,10 +1059,9 @@ def _get_basic_auth_info(request):
     username, password = base64.b64decode(auth).split(':')
     return username, password
 
-def layer_acls(request):
+def get_layer_acls(request):
     """
-    returns json-encoded lists of layer identifiers that 
-    represent the sets of read-write and read-only layers
+    return sets of read-write and read-only layers
     for the currently authenticated user. 
     """
     
@@ -1070,12 +1069,10 @@ def layer_acls(request):
     # user which represents the geoserver administrator that
     # is not present in django.
     acl_user = request.user
-    logger.error("GET ACL for: %s" % acl_user)
     if 'HTTP_AUTHORIZATION' in request.META:
         try:
             username, password = _get_basic_auth_info(request)
             acl_user = authenticate(username=username, password=password)
-            logger.error("RESOLVE: %s" % acl_user)
 
             # Nope, is it the special geoserver user?
             if (acl_user is None and 
@@ -1098,9 +1095,6 @@ def layer_acls(request):
                                 status=401,
                                 mimetype="text/plain")
 
-            
-    else:
-        logger.error("NOT RESOLVE")
     all_readable = set()
     all_writable = set()
     acl_objects = [acl_user] + [g for g in acl_user.groups.all()]
@@ -1129,9 +1123,17 @@ def layer_acls(request):
         'is_superuser':  acl_user.is_superuser,
         'is_anonymous': acl_user.is_anonymous()
     }
+    return result
 
+def layer_acls(request):
+    """
+    returns json-encoded lists of layer identifiers that 
+    represent the sets of read-write and read-only layers
+    for the currently authenticated user. 
+    """
+    result = get_layer_acls(request)
+    
     return HttpResponse(json.dumps(result), mimetype="application/json")
-
 
 def _split_query(query):
     """
