@@ -601,7 +601,6 @@ class LayerManager(models.Manager):
 
     def slurp(self):
         cat = self.gs_catalog
-        gn = self.gn_catalog
         for resource in cat.get_resources():
             try:
                 store = resource.store
@@ -616,28 +615,10 @@ class LayerManager(models.Manager):
                     "abstract": resource.abstract or 'No abstract provided',
                     "uuid": str(uuid.uuid4())
                 })
-
-                ## Due to a bug in GeoNode versions prior to 1.0RC2, the data
-                ## in the database may not have a valid date_type set.  The
-                ## invalid values are expected to differ from the acceptable
-                ## values only by case, so try to convert, then fallback to a
-                ## default.
-                ##
-                ## We should probably drop this adjustment in 1.1. --David Winslow
-                if layer.date_type not in Layer.VALID_DATE_TYPES:
-                    candidate = lower(layer.date_type)
-                    if candidate in Layer.VALID_DATE_TYPES:
-                        layer.date_type = candidate
-                    else:
-                        layer.date_type = Layer.VALID_DATE_TYPES[0]
-
-                layer.save()
                 if created: 
                     layer.set_default_permissions()
-            finally:
-                pass
-        # Doing a logout since we know we don't need this object anymore.
-        gn.logout()
+            except:
+                passs
 
 class Layer(models.Model, PermissionLevelMixin):
     """
