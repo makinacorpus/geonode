@@ -618,7 +618,7 @@ class LayerManager(models.Manager):
                 if created: 
                     layer.set_default_permissions()
             except:
-                passs
+                pass
 
 class Layer(models.Model, PermissionLevelMixin):
     """
